@@ -1,50 +1,63 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import NewsCache from 'node-cache';
+import NodeCache from 'node-cache';  // ✅ Corrected: should be NodeCache, not NewsCache
 import path from 'path';
 import { fileURLToPath } from 'url';
 import newsRoutes from './routes/newsRoutes.js';
 import translationRoutes from './routes/translationRoutes.js';
+import process from 'node:process'; // ✅ Fixes 'process is not defined'
 
-// Load env from backend/.env and fallback to project root .env
-dotenv.config();
+// ✅ Load environment variables
 try {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   dotenv.config({ path: path.resolve(__dirname, '../.env') });
-} catch {}
-dotenv.config();
+} catch (err) {
+  console.warn('⚠️ Could not load local .env file:', err.message);
+}
 
+// Initialize Express
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
+// ✅ Middleware
+const allowedOrigins = [
+  'https://ai-news-verifier-eta.vercel.app', // your frontend domain
+  'http://localhost:5173'                    // for local testing
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Initialize cache
-export const newsCache = new NewsCache({ stdTTL: 3600 }); // 1 hour cache
+// ✅ Initialize cache (1 hour)
+export const newsCache = new NodeCache({ stdTTL: 3600 });
 
-// Routes
+// ✅ Routes
 app.use('/api/news', newsRoutes);
 app.use('/api/translate', translationRoutes);
 
-// Health check
+// ✅ Health check route
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'AI News Verifier API is running' });
 });
 
-// Error handling middleware
+// ✅ Error handling middleware (keep 'next' even if unused)
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ 
-    error: 'Something went wrong!', 
-    message: err.message 
+  console.error('❌ Error:', err.stack || err.message);
+  res.status(500).json({
+    error: 'Something went wrong!',
+    message: err.message,
   });
 });
 
+// ✅ Start the server
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
