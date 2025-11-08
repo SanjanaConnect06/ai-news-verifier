@@ -23,36 +23,33 @@ const PORT = process.env.PORT || 5000;
 
 // ✅ Middleware
 const allowedOrigins = [
-  'https://ai-news-verifier-eta.vercel.app', // your frontend domain
+  'https://ai-news-verifier-eta.vercel.app', // your deployed frontend (Vercel)
   'http://localhost:5173'                    // for local testing
 ];
 
-// ✅ TEMP FIX — allow all origins (for debugging)
-app.use(
-  cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type'],
-  })
-);
-
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// ✅ Initialize cache (1 hour)
-export const newsCache = new NodeCache({ stdTTL: 3600 });
 
 // ✅ Routes
 app.use('/api/news', newsRoutes);
 app.use('/api/translate', translationRoutes);
 
-// ✅ Health check route
+// ✅ Health check routes
+app.get('/', (req, res) => {
+  res.send('✅ AI News Verifier backend is running successfully!');
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'AI News Verifier API is running' });
 });
 
-// ✅ Error handling middleware (keep 'next' even if unused)
+// ✅ Error handling middleware
 app.use((err, req, res, next) => {
   console.error('❌ Error:', err.stack || err.message);
   res.status(500).json({
@@ -61,7 +58,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ✅ Start the server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+// ✅ Important: bind to 0.0.0.0 (needed for Railway!)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
+
