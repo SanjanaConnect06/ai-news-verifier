@@ -33,7 +33,7 @@ const allowedOrigins = [
 
 // ✅ Middleware
 app.use(cors({
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -41,10 +41,15 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
+  methods: ['GET', 'POST', 'OPTIONS'], // <-- Added OPTIONS for preflight
+  allowedHeaders: ['Content-Type'],
+  credentials: true
 }));
 
+// ✅ Handle preflight (CORS) requests globally
+app.options('*', cors());
+
+// ✅ Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
