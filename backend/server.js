@@ -27,11 +27,15 @@ const allowedOrigins = [
   'http://localhost:5173'                    // for local testing
 ];
 
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
-}));
+// ✅ TEMP FIX — allow all origins (for debugging)
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type'],
+  })
+);
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
