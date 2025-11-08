@@ -134,4 +134,3 @@ Combat misinformation in the digital age by providing an accessible, AI-powered 
 
 ---
 
-Made with ❤️ for the Ideathon
