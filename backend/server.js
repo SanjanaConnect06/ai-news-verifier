@@ -43,20 +43,19 @@ app.use('/api/translate', translationRoutes);
 // ✅ Health Check
 // ✅ Health Check Routes
 app.get('/', (req, res) => {
-  res.send('✅ AI News Verifier backend is running successfully!');
+  res.status(200).send('✅ AI News Verifier backend is running successfully!');
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'AI News Verifier API is running' });
+  res.status(200).json({ status: 'OK', message: 'AI News Verifier API is running' });
 });
 
-// ✅ Railway health endpoint (prevents container shutdown)
 app.get('/railway/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// ✅ Start server with dynamic Railway port
+// ✅ Start Server (Railway requires 0.0.0.0 binding)
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server is running and alive on port ${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
