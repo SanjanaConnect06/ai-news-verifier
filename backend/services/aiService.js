@@ -42,24 +42,28 @@ CURRENT DATE: ${new Date().toLocaleDateString('en-US', {
 })}
 
 Your Task:
-1. Determine if this claim is TRUE/RIGHT or FALSE/WRONG
-2. Provide CLEAR EVIDENCE supporting your verdict
-3. Reference specific sources when possible
-4. Give a credibility score (0-100)
+1. Determine if this claim is TRUE or FALSE - NO MIDDLE GROUND
+2. Provide CLEAR EVIDENCE with source citations
+3. Be DECISIVE - use extreme scores (90-100 for TRUE, 0-20 for FALSE)
+4. Check against your knowledge of current world leaders and facts
 
 VERDICT OPTIONS (ONLY USE THESE TWO):
-- "TRUE" - Claim is correct/accurate
-- "FALSE" - Claim is wrong/incorrect
+- "TRUE" - Claim is factually correct (Score: 90-100)
+- "FALSE" - Claim is factually wrong (Score: 0-20)
 
-Be decisive. If mostly true, say TRUE. If mostly false, say FALSE. No middle ground.
+SCORING RULES:
+- If TRUE: Score must be 90-100 (very high confidence)
+- If FALSE: Score must be 0-20 (very low, showing it's wrong)
+- NO scores between 21-89 - be decisive!
 
-IMPORTANT RULES:
-✓ Use your real-time knowledge of current events
-✓ Cross-check claim against provided news sources
-✓ Verify dates, numbers, and factual statements
-✓ Cite specific evidence ("According to Source 1...", "Based on current facts...")
-✓ Be definitive when facts are clear (don't hedge on obvious truths/lies)
+IMPORTANT:
+✓ You have knowledge of current world leaders (Modi is PM of India, Biden is US President, etc.)
+✓ If claim says wrong person is in power = FALSE with score 5-10
+✓ If claim says correct person is in power = TRUE with score 95-100
+✓ Cross-check against provided news sources
+✓ Cite specific evidence ("According to Source 1...", "Based on current facts as of {date}...")
 ✓ Check if claim contradicts well-known facts
+✓ Be DEFINITIVE - no hedging on clear facts
 
 Respond in this EXACT JSON format:
 {
@@ -109,14 +113,23 @@ Respond in this EXACT JSON format:
     
     // Normalize verdict to TRUE or FALSE
     let verdict = result.verdict;
+    let score = result.credibilityScore || 50;
+    
     if (verdict !== 'TRUE' && verdict !== 'FALSE') {
       // If AI didn't give TRUE/FALSE, decide based on score
-      verdict = result.credibilityScore >= 50 ? 'TRUE' : 'FALSE';
+      verdict = score >= 50 ? 'TRUE' : 'FALSE';
+    }
+    
+    // Force extreme scores for clear verdicts
+    if (verdict === 'TRUE' && score < 90) {
+      score = 95; // Force high score for TRUE
+    } else if (verdict === 'FALSE' && score > 20) {
+      score = 10; // Force low score for FALSE
     }
     
     return {
       verdict: verdict,
-      credibilityScore: Math.min(100, Math.max(0, result.credibilityScore || 50)),
+      credibilityScore: Math.min(100, Math.max(0, score)),
       analysis: analysis,
       isRight: result.isRight,
       aiPowered: true
