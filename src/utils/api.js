@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ai-news-verifier-production.up.railway.app/api';
+const API_BASE_URL = "https://ai-news-verifier-1.onrender.com";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,10 +9,10 @@ const api = axios.create({
   },
 });
 
-// Verify news text
+// ✅ Verify news text
 export const verifyNews = async (text) => {
   try {
-    const response = await api.post('/news/verify', { text });
+    const response = await api.post('/api/news/verify', { text }); // <-- added /api
     return response.data;
   } catch (error) {
     console.error('Error verifying news:', error);
@@ -20,10 +20,10 @@ export const verifyNews = async (text) => {
   }
 };
 
-// Search news articles
+// ✅ Search news articles
 export const searchNews = async (query) => {
   try {
-    const response = await api.get('/news/search', {
+    const response = await api.get('/api/news/search', {  // <-- added /api
       params: { q: query },
     });
     return response.data;
@@ -33,10 +33,10 @@ export const searchNews = async (query) => {
   }
 };
 
-// Get article details
+// ✅ Get article details
 export const getArticleDetails = async (id) => {
   try {
-    const response = await api.get(`/news/article/${id}`);
+    const response = await api.get(`/api/news/article/${id}`); // <-- added /api
     return response.data;
   } catch (error) {
     console.error('Error fetching article:', error);
@@ -44,10 +44,10 @@ export const getArticleDetails = async (id) => {
   }
 };
 
-// Translate text
+// ✅ Translate text
 export const translateText = async (text, targetLang) => {
   try {
-    const response = await api.post('/translate', { text, targetLang });
+    const response = await api.post('/api/translate', { text, targetLang }); // <-- added /api
     return response.data;
   } catch (error) {
     console.error('Error translating text:', error);
@@ -55,10 +55,10 @@ export const translateText = async (text, targetLang) => {
   }
 };
 
-// Health check
+// ✅ Health check
 export const checkHealth = async () => {
   try {
-    const response = await api.get('/health');
+    const response = await api.get('/api/health'); // <-- added /api
     return response.data;
   } catch (error) {
     console.error('Error checking health:', error);
