@@ -41,6 +41,19 @@ CURRENT DATE: ${new Date().toLocaleDateString('en-US', {
   weekday: 'long' 
 })}
 
+KNOWN FACTS (as of November 2025):
+- Narendra Modi is the Prime Minister of India (since 2014)
+- Joe Biden is the President of USA (since 2021)
+- Rahul Gandhi is NOT the Prime Minister of India (he is a Congress party leader)
+- Donald Trump is NOT currently President (term ended 2021)
+- The Earth is round (oblate spheroid)
+- The Earth revolves around the Sun
+
+IF THE CLAIM IS ABOUT POLITICAL LEADERS:
+- Check against the known facts above
+- If claim says wrong person is in power = FALSE with score 5
+- If claim says correct person is in power = TRUE with score 98
+
 Your Task:
 1. Determine if this claim is TRUE or FALSE - NO MIDDLE GROUND
 2. Provide CLEAR EVIDENCE with source citations
@@ -82,7 +95,7 @@ Respond in this EXACT JSON format:
       messages: [
         {
           role: 'system',
-          content: 'You are a professional fact-checker and news analyst. Always provide accurate, well-researched responses in valid JSON format. Use current knowledge and cross-reference with provided sources.'
+          content: 'You are a professional fact-checker. CRITICAL: Narendra Modi is PM of India (NOT Rahul Gandhi). Joe Biden is US President. You MUST check claims about leaders against these facts. If someone claims Rahul Gandhi is PM of India, it is FALSE (score: 5). If someone claims Modi is PM, it is TRUE (score: 98). Always respond in valid JSON format.'
         },
         {
           role: 'user',
