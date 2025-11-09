@@ -1,3 +1,4 @@
+// 🚀 AI News Verifier backend — universal CORS debug version
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -10,7 +11,7 @@ import process from 'node:process';
 
 export const newsCache = new NodeCache({ stdTTL: 3600 });
 
-// ✅ Load .env file
+// ✅ Load environment variables
 try {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
@@ -21,49 +22,40 @@ try {
 
 const app = express();
 
-// ✅ Allow frontend + local origins
-const allowedOrigins = [
-  'https://ai-news-verifier-eta.vercel.app',
-  'http://localhost:5173'
-];
-
-// ✅ FIXED: Proper CORS setup (handles preflight too)
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  })
-);
-
-// ✅ Add explicit preflight handling
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', allowedOrigins.join(','));
-  res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  res.sendStatus(200);
+// ✅ UNIVERSAL CORS FIX (for all origins during debugging)
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // Allow all origins
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200); // Handle preflight
+  }
+  next();
 });
 
-// ✅ Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Routes
+// ✅ API Routes
 app.use('/api/news', newsRoutes);
 app.use('/api/translate', translationRoutes);
 
-// ✅ Health checks
+// ✅ Health Check
 app.get('/', (req, res) => res.send('✅ AI News Verifier backend is running successfully!'));
-app.get('/api/health', (req, res) => res.json({ status: 'OK' }));
+app.get('/api/health', (req, res) => res.json({ status: 'OK', message: 'AI News Verifier API is running' }));
 app.get('/railway-health', (req, res) => res.send('OK'));
 
-// ✅ Error handler
+// ✅ Global Error Handler
 app.use((err, req, res, next) => {
   console.error('❌ Error:', err.stack || err.message);
-  res.status(500).json({ error: 'Server error', message: err.message });
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: err.message
+  });
 });
 
-// ✅ Start server
+// ✅ Start server (Railway dynamic port)
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 Server is running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+});
