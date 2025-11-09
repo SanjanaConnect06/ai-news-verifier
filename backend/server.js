@@ -41,21 +41,22 @@ app.use('/api/news', newsRoutes);
 app.use('/api/translate', translationRoutes);
 
 // ✅ Health Check
-app.get('/', (req, res) => res.send('✅ AI News Verifier backend is running successfully!'));
-app.get('/api/health', (req, res) => res.json({ status: 'OK', message: 'AI News Verifier API is running' }));
-app.get('/railway-health', (req, res) => res.send('OK'));
-
-// ✅ Global Error Handler
-app.use((err, req, res, next) => {
-  console.error('❌ Error:', err.stack || err.message);
-  res.status(500).json({
-    error: 'Internal Server Error',
-    message: err.message
-  });
+// ✅ Health Check Routes
+app.get('/', (req, res) => {
+  res.send('✅ AI News Verifier backend is running successfully!');
 });
 
-// ✅ Start server (Railway dynamic port)
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', message: 'AI News Verifier API is running' });
+});
+
+// ✅ Railway health endpoint (prevents container shutdown)
+app.get('/railway/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// ✅ Start server with dynamic Railway port
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`🚀 Server is running and alive on port ${PORT}`);
 });
