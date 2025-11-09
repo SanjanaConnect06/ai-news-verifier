@@ -80,6 +80,22 @@ app.use((err, req, res, next) => {
 });
 
 // ✅ Start Server (Railway requires 0.0.0.0 binding)
+// ✅ Health Check Routes
+app.get('/', (req, res) => {
+  res.send('✅ AI News Verifier backend is running successfully!');
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', message: 'AI News Verifier API is running' });
+});
+
+app.get('/railway-health', (req, res) => {
+  res.send('OK');
+});
+
+// ✅ Start Server (Railway requires dynamic PORT binding)
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server is running on port ${PORT}`);
 });
+
