@@ -1,4 +1,4 @@
-// 🚀 AI News Verifier backend — universal CORS debug version
+// 🚀 AI News Verifier backend — universal CORS debug + production-safe version
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -9,6 +9,7 @@ import newsRoutes from './routes/newsRoutes.js';
 import translationRoutes from './routes/translationRoutes.js';
 import process from 'node:process';
 
+// ✅ Shared cache instance for controllers
 export const newsCache = new NodeCache({ stdTTL: 3600 });
 
 // ✅ Load environment variables
@@ -22,17 +23,17 @@ try {
 
 const app = express();
 
-// ✅ UNIVERSAL CORS FIX (for all origins during debugging)
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'); // Allow all origins
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200); // Handle preflight
-  }
-  next();
-});
+// ✅ CORS (allow all origins for testing)
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
+// ✅ Handle preflight requests globally
+app.options('*', cors());
+
+// ✅ Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -40,7 +41,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/news', newsRoutes);
 app.use('/api/translate', translationRoutes);
 
-// ✅ Health Check
 // ✅ Health Check Routes
 app.get('/', (req, res) => {
   res.status(200).send('✅ AI News Verifier backend is running successfully!');
@@ -54,7 +54,13 @@ app.get('/railway/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// ✅ Start Server (Railway requires 0.0.0.0 binding)
+// ✅ Global error handler
+app.use((err, req, res, next) => {
+  console.error('❌ Error:', err.message || err);
+  res.status(500).json({ error: 'Something went wrong!', details: err.message });
+});
+
+// ✅ Start Server (must bind to 0.0.0.0 for Railway)
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server is running on port ${PORT}`);
