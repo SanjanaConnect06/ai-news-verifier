@@ -22,16 +22,19 @@ export async function verifyClaimWithAI(claim, articles) {
     }
 
     // Prepare context from articles
-    const articlesContext = articles.slice(0, 5).map((article, idx) => 
-      `Source ${idx + 1} (${article.source}):\nTitle: ${article.title}\nDescription: ${article.description || 'N/A'}\n`
+    const articlesContext = articles.slice(0, 10).map((article, idx) => 
+      `[${idx + 1}] ${article.source} - "${article.title}"\nSummary: ${article.description || 'N/A'}\nURL: ${article.url}\n`
     ).join('\n');
 
-    const prompt = `You are an expert fact-checker and news analyst. Your job is to determine if a news claim is RIGHT or WRONG and provide clear evidence.
+    const prompt = `You are a professional fact-checking assistant.
 
-CLAIM TO VERIFY:
+Your goal is to verify whether a given claim is TRUE, FALSE, or UNCERTAIN using recent, reliable news information.
+
+Claim to verify:
 "${claim}"
 
-RELATED NEWS SOURCES:
+Here are the latest verified headlines and summaries retrieved from trusted sources:
+
 ${articlesContext || 'No recent news articles found on this topic.'}
 
 CURRENT DATE: ${new Date().toLocaleDateString('en-US', { 
@@ -46,49 +49,32 @@ KNOWN FACTS (as of November 2025):
 - Joe Biden is the President of USA (since 2021)
 - Rahul Gandhi is NOT the Prime Minister of India (he is a Congress party leader)
 - Donald Trump is NOT currently President (term ended 2021)
-- The Earth is round (oblate spheroid)
-- The Earth revolves around the Sun
 
-IF THE CLAIM IS ABOUT POLITICAL LEADERS:
-- Check against the known facts above
-- If claim says wrong person is in power = FALSE with score 5
-- If claim says correct person is in power = TRUE with score 98
+Instructions:
+1. Analyze the claim against these headlines carefully.
+2. If the majority of credible sources support the claim → verdict = TRUE.
+3. If the majority contradict it → verdict = FALSE.
+4. If evidence is mixed or insufficient → verdict = UNCERTAIN.
+5. Assign a confidence score (0–100) based on clarity of evidence.
+6. Provide a concise reasoning paragraph.
+7. Include 2–3 URLs of the most relevant sources from the provided articles.
 
-Your Task:
-1. Determine if this claim is TRUE or FALSE - NO MIDDLE GROUND
-2. Provide CLEAR EVIDENCE with source citations
-3. Be DECISIVE - use extreme scores (90-100 for TRUE, 0-20 for FALSE)
-4. Check against your knowledge of current world leaders and facts
+IMPORTANT SCORING:
+- TRUE: confidence 90-100 (strong evidence supports the claim)
+- FALSE: confidence 90-100 (strong evidence contradicts the claim)
+- UNCERTAIN: confidence 20-60 (mixed or insufficient evidence)
 
-VERDICT OPTIONS (ONLY USE THESE TWO):
-- "TRUE" - Claim is factually correct (Score: 90-100)
-- "FALSE" - Claim is factually wrong (Score: 0-20)
+For political leader claims:
+- Check against known facts above
+- If claim says CORRECT person is in power → TRUE with confidence 95-100
+- If claim says WRONG person is in power → FALSE with confidence 95-100
 
-SCORING RULES:
-- If TRUE: Score must be 90-100 (very high confidence)
-- If FALSE: Score must be 0-20 (very low, showing it's wrong)
-- NO scores between 21-89 - be decisive!
-
-IMPORTANT:
-✓ You have knowledge of current world leaders (Modi is PM of India, Biden is US President, etc.)
-✓ If claim says wrong person is in power = FALSE with score 5-10
-✓ If claim says correct person is in power = TRUE with score 95-100
-✓ Cross-check against provided news sources
-✓ Cite specific evidence ("According to Source 1...", "Based on current facts as of {date}...")
-✓ Check if claim contradicts well-known facts
-✓ Be DEFINITIVE - no hedging on clear facts
-
-Respond in this EXACT JSON format:
+Respond **only** in valid JSON format:
 {
-  "verdict": "TRUE" or "FALSE" (ONLY these two options),
-  "credibilityScore": 0-100,
-  "isRight": true/false (true if claim is correct),
-  "evidence": [
-    "Evidence point 1 with source reference",
-    "Evidence point 2 with factual basis",
-    "Evidence point 3 explaining why"
-  ],
-  "summary": "One clear sentence: This claim is [TRUE/FALSE] because..."
+  "verdict": "TRUE" or "FALSE" or "UNCERTAIN",
+  "confidence": number (0-100),
+  "reasoning": "string (2-3 sentences explaining the verdict)",
+  "sources": ["url1", "url2", "url3"]
 }`;
 
     const completion = await groq.chat.completions.create({
@@ -116,35 +102,39 @@ Respond in this EXACT JSON format:
     const result = JSON.parse(responseText);
     
     // Validate and normalize the result
-    const evidence = Array.isArray(result.evidence) ? result.evidence : [];
-    const analysis = [...evidence];
+    let verdict = result.verdict || 'UNCERTAIN';
+    let confidence = result.confidence || 50;
     
-    // Add summary as first item if present
-    if (result.summary) {
-      analysis.unshift(`✓ ${result.summary}`);
+    // Build analysis from reasoning
+    const analysis = [];
+    if (result.reasoning) {
+      analysis.push(`✓ ${result.reasoning}`);
     }
     
-    // Normalize verdict to TRUE or FALSE
-    let verdict = result.verdict;
-    let score = result.credibilityScore || 50;
+    // Add source information if available
+    if (result.sources && Array.isArray(result.sources) && result.sources.length > 0) {
+      analysis.push(`Sources: ${result.sources.slice(0, 3).join(', ')}`);
+    }
     
-    if (verdict !== 'TRUE' && verdict !== 'FALSE') {
-      // If AI didn't give TRUE/FALSE, decide based on score
-      verdict = score >= 50 ? 'TRUE' : 'FALSE';
+    // Normalize verdict
+    if (!['TRUE', 'FALSE', 'UNCERTAIN'].includes(verdict)) {
+      verdict = confidence >= 70 ? 'TRUE' : confidence <= 40 ? 'FALSE' : 'UNCERTAIN';
     }
     
     // Force extreme scores for clear verdicts
-    if (verdict === 'TRUE' && score < 90) {
-      score = 95; // Force high score for TRUE
-    } else if (verdict === 'FALSE' && score > 20) {
-      score = 10; // Force low score for FALSE
+    if (verdict === 'TRUE' && confidence < 90) {
+      confidence = 95;
+    } else if (verdict === 'FALSE' && confidence < 90) {
+      confidence = 95;
+    } else if (verdict === 'UNCERTAIN' && confidence > 60) {
+      confidence = 50;
     }
     
     return {
       verdict: verdict,
-      credibilityScore: Math.min(100, Math.max(0, score)),
+      credibilityScore: Math.min(100, Math.max(0, confidence)),
       analysis: analysis,
-      isRight: result.isRight,
+      sources: result.sources || [],
       aiPowered: true
     };
 

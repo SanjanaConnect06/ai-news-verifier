@@ -109,10 +109,33 @@ function VerificationResult({ result }) {
     setTtsSpeaking(false);
   };
 
-  const getScoreColor = (v) => v === 'TRUE' ? 'text-green-700' : 'text-red-700';
-  const getScoreBg = (v) => v === 'TRUE' ? 'bg-gradient-to-br from-green-50 to-emerald-100 border-green-300' : 'bg-gradient-to-br from-red-50 to-rose-100 border-red-300';
-  const getVerdictIcon = (v) => v === 'TRUE' ? <CheckCircle className="w-16 h-16" /> : <XCircle className="w-16 h-16" />;
-  const getVerdictLabel = (v) => v === 'TRUE' ? '✅ TRUE' : '❌ FALSE';
+  const getScoreColor = (v) => {
+    if (v === 'TRUE') return 'text-green-700';
+    if (v === 'FALSE') return 'text-red-700';
+    if (v === 'UNCERTAIN') return 'text-yellow-700';
+    return 'text-gray-600';
+  };
+  
+  const getScoreBg = (v) => {
+    if (v === 'TRUE') return 'bg-gradient-to-br from-green-50 to-emerald-100 border-green-300';
+    if (v === 'FALSE') return 'bg-gradient-to-br from-red-50 to-rose-100 border-red-300';
+    if (v === 'UNCERTAIN') return 'bg-gradient-to-br from-yellow-50 to-amber-100 border-yellow-300';
+    return 'bg-gradient-to-br from-gray-50 to-slate-100 border-gray-300';
+  };
+  
+  const getVerdictIcon = (v) => {
+    if (v === 'TRUE') return <CheckCircle className="w-16 h-16" />;
+    if (v === 'FALSE') return <XCircle className="w-16 h-16" />;
+    if (v === 'UNCERTAIN') return <AlertTriangle className="w-16 h-16" />;
+    return <AlertTriangle className="w-16 h-16" />;
+  };
+  
+  const getVerdictLabel = (v) => {
+    if (v === 'TRUE') return '✅ TRUE';
+    if (v === 'FALSE') return '❌ FALSE';
+    if (v === 'UNCERTAIN') return '⚠️ UNCERTAIN';
+    return v;
+  };
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
