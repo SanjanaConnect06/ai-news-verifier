@@ -26,15 +26,15 @@ export async function verifyClaimWithAI(claim, articles) {
       `[${idx + 1}] ${article.source} - "${article.title}"\nSummary: ${article.description || 'N/A'}\nURL: ${article.url}\n`
     ).join('\n');
 
-    const prompt = `You are a professional fact-checking assistant.
+    const prompt = `You are an AI-powered fact-checking system that verifies real-world news claims.
 
-Your goal is to verify whether a given claim is TRUE, FALSE, or UNCERTAIN using recent, reliable news information.
+Task:
+Determine if the given claim is TRUE, FALSE, or UNCERTAIN based on up-to-date news sources.
 
-Claim to verify:
+Claim:
 "${claim}"
 
-Here are the latest verified headlines and summaries retrieved from trusted sources:
-
+Here are recent articles and headlines from verified outlets (BBC, Reuters, AP, The Hindu, NDTV, etc.):
 ${articlesContext || 'No recent news articles found on this topic.'}
 
 CURRENT DATE: ${new Date().toLocaleDateString('en-US', { 
@@ -51,37 +51,36 @@ KNOWN FACTS (as of November 2025):
 - Donald Trump is NOT currently President (term ended 2021)
 
 Instructions:
-1. Analyze the claim against these headlines carefully.
-2. If the majority of credible sources support the claim → verdict = TRUE.
-3. If the majority contradict it → verdict = FALSE.
-4. If evidence is mixed or insufficient → verdict = UNCERTAIN.
-5. Assign a confidence score (0–100) based on clarity of evidence.
-6. Provide a concise reasoning paragraph.
-7. Include 2–3 URLs of the most relevant sources from the provided articles.
+1. Carefully compare the claim with the news data above.
+2. If none of the articles confirm the claim → verdict = FALSE.
+3. If some clearly support the claim → verdict = TRUE.
+4. If coverage is ambiguous or outdated → verdict = UNCERTAIN.
+5. Never assume truth without evidence.
+6. Include 2–3 relevant headlines as supporting or contradicting references.
 
-IMPORTANT SCORING:
-- TRUE: confidence 90-100 (strong evidence supports the claim)
-- FALSE: confidence 90-100 (strong evidence contradicts the claim)
-- UNCERTAIN: confidence 20-60 (mixed or insufficient evidence)
+SCORING:
+- TRUE: confidence 90-100 (articles support the claim)
+- FALSE: confidence 90-100 (articles contradict or don't support the claim)
+- UNCERTAIN: confidence 30-60 (ambiguous or insufficient coverage)
 
 For political leader claims:
 - Check against known facts above
 - If claim says CORRECT person is in power → TRUE with confidence 95-100
 - If claim says WRONG person is in power → FALSE with confidence 95-100
 
-Respond **only** in valid JSON format:
+Respond only in JSON:
 {
-  "verdict": "TRUE" or "FALSE" or "UNCERTAIN",
+  "verdict": "TRUE | FALSE | UNCERTAIN",
   "confidence": number (0-100),
-  "reasoning": "string (2-3 sentences explaining the verdict)",
-  "sources": ["url1", "url2", "url3"]
+  "reasoning": "Explain concisely why this verdict was reached.",
+  "sources": ["headline 1", "headline 2", "headline 3"]
 }`;
 
     const completion = await groq.chat.completions.create({
       messages: [
         {
           role: 'system',
-          content: 'You are a professional fact-checker. CRITICAL: Narendra Modi is PM of India (NOT Rahul Gandhi). Joe Biden is US President. You MUST check claims about leaders against these facts. If someone claims Rahul Gandhi is PM of India, it is FALSE (score: 5). If someone claims Modi is PM, it is TRUE (score: 98). Always respond in valid JSON format.'
+          content: 'You are an AI fact-checking system. CRITICAL: Narendra Modi is PM of India (NOT Rahul Gandhi). Joe Biden is US President. Always verify claims against provided news sources and known facts. Never assume truth without evidence. If articles don\'t support a claim, mark it FALSE. Respond only in valid JSON format with verdict, confidence, reasoning, and sources.'
         },
         {
           role: 'user',
