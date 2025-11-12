@@ -24,17 +24,17 @@ function HomePage({ history, addToHistory }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="max-w-6xl mx-auto space-y-8"
+      className="w-full max-w-6xl mx-auto space-y-8"
     >
       {/* Hero Section */}
-      <div className="text-center py-12 md:py-20 px-4">
+      <div className="text-center py-8 md:py-12 px-4">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="mb-8"
+          className="mb-6"
         >
-          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold mb-8 shadow-lg">
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold mb-6 shadow-lg shadow-blue-500/50">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
@@ -46,7 +46,7 @@ function HomePage({ history, addToHistory }) {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent leading-tight tracking-tight"
+          className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent leading-tight tracking-tight"
         >
           Verify News,
           <br />
@@ -56,7 +56,7 @@ function HomePage({ history, addToHistory }) {
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-medium"
+          className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed font-medium"
         >
           Instantly verify any news claim with AI-powered analysis across multiple trusted sources. Get credibility scores and fact-checking in seconds.
         </motion.p>
@@ -64,19 +64,19 @@ function HomePage({ history, addToHistory }) {
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="mt-10 flex flex-wrap justify-center gap-3 text-sm font-medium"
+          className="mt-8 flex flex-wrap justify-center gap-3 text-sm font-medium"
         >
-          <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm px-5 py-3 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
-            <span className="text-emerald-500 text-lg font-bold">✓</span>
-            <span className="text-gray-700">Multi-source verification</span>
+          <div className="flex items-center space-x-2 bg-gray-800/80 backdrop-blur-sm px-5 py-3 rounded-xl shadow-lg border border-gray-700 hover:shadow-xl hover:border-emerald-500/50 transition-all">
+            <span className="text-emerald-400 text-lg font-bold">✓</span>
+            <span className="text-gray-300">Multi-source verification</span>
           </div>
-          <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm px-5 py-3 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
-            <span className="text-emerald-500 text-lg font-bold">✓</span>
-            <span className="text-gray-700">Real-time analysis</span>
+          <div className="flex items-center space-x-2 bg-gray-800/80 backdrop-blur-sm px-5 py-3 rounded-xl shadow-lg border border-gray-700 hover:shadow-xl hover:border-emerald-500/50 transition-all">
+            <span className="text-emerald-400 text-lg font-bold">✓</span>
+            <span className="text-gray-300">Real-time analysis</span>
           </div>
-          <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm px-5 py-3 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
-            <span className="text-emerald-500 text-lg font-bold">✓</span>
-            <span className="text-gray-700">Indian languages support</span>
+          <div className="flex items-center space-x-2 bg-gray-800/80 backdrop-blur-sm px-5 py-3 rounded-xl shadow-lg border border-gray-700 hover:shadow-xl hover:border-emerald-500/50 transition-all">
+            <span className="text-emerald-400 text-lg font-bold">✓</span>
+            <span className="text-gray-300">Indian languages support</span>
           </div>
         </motion.div>
       </div>
@@ -136,7 +136,7 @@ function HomePage({ history, addToHistory }) {
           <motion.h2
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="text-3xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4"
+            className="text-3xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4"
           >
             Analyzing with AI
           </motion.h2>
@@ -154,7 +154,7 @@ function HomePage({ history, addToHistory }) {
                   repeat: Infinity,
                   delay: i * 0.2
                 }}
-                className="w-3 h-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"
+                className="w-3 h-3 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full shadow-lg shadow-blue-500/50"
               />
             ))}
           </motion.div>
@@ -162,7 +162,7 @@ function HomePage({ history, addToHistory }) {
           <motion.p
             animate={{ opacity: [0.6, 1, 0.6] }}
             transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-            className="text-gray-600 text-lg font-medium"
+            className="text-gray-400 text-lg font-medium"
           >
             Checking facts across multiple sources...
           </motion.p>

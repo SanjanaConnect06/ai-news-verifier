@@ -34,14 +34,14 @@ function VerificationForm({ onResult, loading, setLoading }) {
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="relative group"
         >
-          <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-3xl opacity-30 group-hover:opacity-40 group-focus-within:opacity-50 blur-md transition duration-500 animate-pulse"></div>
-          <div className="relative bg-white rounded-3xl shadow-2xl border-2 border-gray-100 group-focus-within:border-blue-300 transition-all duration-300">
+          <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-3xl opacity-50 group-hover:opacity-60 group-focus-within:opacity-70 blur-md transition duration-500 animate-pulse"></div>
+          <div className="relative bg-gray-800/90 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-gray-700 group-focus-within:border-blue-500 transition-all duration-300">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="✨ Enter a news claim or headline to verify..."
-              className="w-full px-8 py-7 text-lg rounded-3xl focus:outline-none transition-all bg-transparent font-semibold text-gray-900 placeholder:text-gray-400 placeholder:font-normal"
+              className="w-full px-8 py-7 text-lg rounded-3xl focus:outline-none transition-all bg-transparent font-semibold text-white placeholder:text-gray-500 placeholder:font-normal"
               disabled={loading}
             />
             <motion.div
