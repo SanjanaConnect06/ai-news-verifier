@@ -138,36 +138,77 @@ function VerificationResult({ result }) {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="space-y-8"
+    >
       {/* Score Card */}
-      <div className={`rounded-3xl border-2 p-10 md:p-14 shadow-2xl ${getScoreBg(verdict)}`}>
-        <div className="text-center space-y-6">
-          <motion.div className={`inline-flex ${getScoreColor(verdict)}`} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.6, type: "spring", bounce: 0.3 }}
+        className={`rounded-3xl border-3 p-12 md:p-16 shadow-2xl hover:shadow-3xl transition-all duration-300 relative overflow-hidden ${getScoreBg(verdict)}`}
+      >
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
+        
+        <div className="text-center space-y-8 relative z-10">
+          <motion.div 
+            className={`inline-flex ${getScoreColor(verdict)}`} 
+            initial={{ scale: 0, rotate: -180 }} 
+            animate={{ scale: 1, rotate: 0 }} 
+            transition={{ type: "spring", delay: 0.2, bounce: 0.4 }}
+          >
             {getVerdictIcon(verdict)}
           </motion.div>
-          <div>
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-3">{getVerdictLabel(verdict)}</h2>
-            <p className="text-xl text-gray-700 font-semibold">Credibility Score</p>
-          </div>
-          <motion.div className={`text-8xl font-black ${getScoreColor(verdict)}`} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.3 }}>
-            {credibilityScore}<span className="text-5xl">/100</span>
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h2 className="text-6xl md:text-7xl font-black text-gray-900 mb-4 tracking-tight">{getVerdictLabel(verdict)}</h2>
+            <p className="text-2xl text-gray-700 font-bold">Credibility Score</p>
+          </motion.div>
+          <motion.div 
+            className={`text-9xl font-black ${getScoreColor(verdict)}`} 
+            initial={{ scale: 0, opacity: 0 }} 
+            animate={{ scale: 1, opacity: 1 }} 
+            transition={{ delay: 0.4, type: "spring", bounce: 0.3 }}
+          >
+            {credibilityScore}<span className="text-6xl">/100</span>
           </motion.div>
         </div>
-        <div className="mt-8 pt-8 border-t-2 border-gray-300">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <p className="text-gray-800 text-lg leading-relaxed flex-1">
-              <span className="font-bold text-xl">Claim: </span>
-              <span className="italic">"{text}"</span>
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mt-10 pt-10 border-t-2 border-gray-300/50 relative z-10"
+        >
+          <div className="flex items-start justify-between gap-5 flex-wrap">
+            <p className="text-gray-900 text-xl leading-relaxed flex-1">
+              <span className="font-black text-2xl bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">Claim: </span>
+              <span className="italic font-semibold">"{text}"</span>
             </p>
             {aiPowered && (
-              <div className="flex items-center gap-2 bg-gradient-to-r from-purple-100 to-indigo-100 px-4 py-2 rounded-full border border-purple-200">
-                <span className="text-purple-600 font-bold">⚡</span>
-                <span className="text-purple-700 font-semibold text-sm">AI-Powered</span>
-              </div>
+              <motion.div 
+                initial={{ scale: 0, rotate: -90 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.6, type: "spring", bounce: 0.5 }}
+                className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-600 px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition-all"
+              >
+                <motion.span 
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="text-yellow-300 font-bold text-lg"
+                >⚡</motion.span>
+                <span className="text-white font-bold text-base">AI-Powered Analysis</span>
+              </motion.div>
             )}
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Translate */}
       <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="bg-white rounded-3xl shadow-lg p-6 md:p-8 border border-gray-100">
@@ -206,18 +247,46 @@ function VerificationResult({ result }) {
 
       {/* Evidence */}
       {analysis && analysis.length > 0 && (
-        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="bg-white rounded-3xl shadow-lg p-6 md:p-8 border border-gray-100">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-            <div className="p-3 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl mr-3">
-              <TrendingUp className="w-6 h-6 text-blue-600" />
-            </div>
-            Evidence & Analysis
-          </h3>
-          <ul className="space-y-4">
+        <motion.div 
+          initial={{ y: 30, opacity: 0, scale: 0.95 }} 
+          animate={{ y: 0, opacity: 1, scale: 1 }} 
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="bg-gradient-to-br from-white to-blue-50/30 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 md:p-10 border-2 border-blue-100 relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-200/30 to-purple-200/30 rounded-full -translate-y-1/3 translate-x-1/3 blur-2xl"></div>
+          
+          <motion.h3 
+            initial={{ x: -30, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-3xl font-black text-gray-900 mb-8 flex items-center relative z-10"
+          >
+            <motion.div 
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="p-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mr-4 shadow-lg"
+            >
+              <TrendingUp className="w-7 h-7 text-white" />
+            </motion.div>
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Evidence & Analysis</span>
+          </motion.h3>
+          <ul className="space-y-5 relative z-10">
             {analysis.map((item, i) => (
-              <motion.li key={i} initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 + i * 0.1 }} className="flex items-start bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200 shadow-sm">
-                <span className="text-blue-600 mr-4 text-2xl font-bold">✓</span>
-                <span className="text-gray-900 font-medium leading-relaxed text-lg">{item}</span>
+              <motion.li 
+                key={i} 
+                initial={{ x: -30, opacity: 0, scale: 0.9 }} 
+                animate={{ x: 0, opacity: 1, scale: 1 }} 
+                transition={{ delay: 0.5 + i * 0.15, type: "spring", bounce: 0.3 }} 
+                whileHover={{ scale: 1.02, x: 5 }}
+                className="flex items-start bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 p-7 rounded-2xl border-2 border-blue-200 shadow-md hover:shadow-lg transition-all group"
+              >
+                <motion.span 
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.6 + i * 0.15, type: "spring" }}
+                  className="text-blue-600 group-hover:text-indigo-600 mr-5 text-3xl font-black transition-colors"
+                >✓</motion.span>
+                <span className="text-gray-900 font-semibold leading-relaxed text-lg">{item}</span>
               </motion.li>
             ))}
           </ul>

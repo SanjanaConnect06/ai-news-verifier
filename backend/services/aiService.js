@@ -159,9 +159,10 @@ Respond only in JSON:
         }
       ],
       model: 'llama-3.3-70b-versatile', // Fast and accurate
-      temperature: 0.3, // Lower temperature for more factual responses
-      max_tokens: 1000,
-      response_format: { type: 'json_object' }
+      temperature: 0.2, // Lower temperature for faster, more factual responses
+      max_tokens: 500, // Reduced for faster response
+      response_format: { type: 'json_object' },
+      timeout: 8000 // 8 second timeout
     });
 
     const responseText = completion.choices[0]?.message?.content;

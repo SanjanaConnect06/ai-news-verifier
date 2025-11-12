@@ -27,40 +27,63 @@ function VerificationForm({ onResult, loading, setLoading }) {
 
   return (
     <div className="max-w-5xl mx-auto px-4">
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="relative group">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-2xl opacity-20 group-hover:opacity-30 blur-sm transition duration-300"></div>
-          <div className="relative bg-white rounded-2xl shadow-xl border border-gray-100">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <motion.div 
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="relative group"
+        >
+          <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-3xl opacity-30 group-hover:opacity-40 group-focus-within:opacity-50 blur-md transition duration-500 animate-pulse"></div>
+          <div className="relative bg-white rounded-3xl shadow-2xl border-2 border-gray-100 group-focus-within:border-blue-300 transition-all duration-300">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Enter a news claim or headline to verify..."
-              className="w-full px-7 py-6 text-lg rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all bg-transparent font-medium text-gray-800 placeholder:text-gray-400"
+              placeholder="✨ Enter a news claim or headline to verify..."
+              className="w-full px-8 py-7 text-lg rounded-3xl focus:outline-none transition-all bg-transparent font-semibold text-gray-900 placeholder:text-gray-400 placeholder:font-normal"
               disabled={loading}
             />
-            <Search className="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
+            <motion.div
+              animate={{ scale: loading ? [1, 1.1, 1] : 1, rotate: loading ? 360 : 0 }}
+              transition={{ duration: 1, repeat: loading ? Infinity : 0 }}
+              className="absolute right-7 top-1/2 transform -translate-y-1/2"
+            >
+              <Search className="text-indigo-500 w-7 h-7" />
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
         
         <motion.button
-          whileHover={{ scale: 1.01, y: -2 }}
-          whileTap={{ scale: 0.99 }}
+          whileHover={{ scale: 1.02, y: -3 }}
+          whileTap={{ scale: 0.98 }}
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
           type="submit"
           disabled={loading || !query.trim()}
-          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-5 rounded-2xl hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold text-lg shadow-xl hover:shadow-2xl flex items-center justify-center space-x-3"
+          className="relative w-full group overflow-hidden"
         >
-          {loading ? (
-            <>
-              <Loader className="w-6 h-6 animate-spin" />
-              <span>Verifying...</span>
-            </>
-          ) : (
-            <>
-              <Search className="w-6 h-6" />
-              <span>Verify News Now</span>
-            </>
-          )}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl transition-all duration-300 group-hover:scale-105"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+          <div className="relative px-8 py-6 text-white font-bold text-xl shadow-2xl flex items-center justify-center space-x-3">
+            {loading ? (
+              <>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                >
+                  <Loader className="w-7 h-7" />
+                </motion.div>
+                <span className="animate-pulse">Analyzing with AI...</span>
+              </>
+            ) : (
+              <>
+                <Search className="w-7 h-7" />
+                <span>🔍 Verify News Now</span>
+              </>
+            )}
+          </div>
         </motion.button>
 
         {error && (

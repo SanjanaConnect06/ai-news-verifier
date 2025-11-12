@@ -133,7 +133,7 @@ async function fetchNewsArticles(query) {
           language: 'en',
           sortBy: 'relevancy'
         },
-        timeout: 5000
+        timeout: 3000
       });
 
       if (response.data.articles) {
@@ -164,7 +164,7 @@ async function fetchNewsArticles(query) {
           lang: 'en',
           max: 10
         },
-        timeout: 5000
+        timeout: 3000
       });
 
       if (response.data.articles) {
@@ -194,7 +194,7 @@ async function fetchNewsArticles(query) {
           apikey: NEWSDATA_API_KEY,
           language: 'en'
         },
-        timeout: 5000
+        timeout: 3000
       });
 
       if (response.data.results) {
@@ -225,7 +225,7 @@ async function fetchNewsArticles(query) {
           'show-fields': 'headline,thumbnail,bodyText',
           'page-size': 10
         },
-        timeout: 5000
+        timeout: 3000
       });
 
       if (response.data.response && response.data.response.results) {

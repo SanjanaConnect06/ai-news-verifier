@@ -94,8 +94,83 @@ function HomePage({ history, addToHistory }) {
         />
       </motion.div>
 
+      {/* Loading Animation */}
+      {loading && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="flex flex-col items-center justify-center py-20 px-4"
+        >
+          <motion.div
+            animate={{ 
+              scale: [1, 1.2, 1],
+              rotate: [0, 360]
+            }}
+            transition={{ 
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut" 
+            }}
+            className="relative mb-8"
+          >
+            <div className="w-32 h-32 rounded-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 blur-xl opacity-60"></div>
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <div className="w-28 h-28 rounded-full border-8 border-t-blue-600 border-r-indigo-600 border-b-purple-600 border-l-transparent"></div>
+            </motion.div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <motion.span
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="text-5xl"
+              >
+                🔍
+              </motion.span>
+            </div>
+          </motion.div>
+          
+          <motion.h2
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className="text-3xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4"
+          >
+            Analyzing with AI
+          </motion.h2>
+          
+          <motion.div className="flex space-x-3 mb-6">
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                animate={{ 
+                  y: [0, -20, 0],
+                  opacity: [0.3, 1, 0.3]
+                }}
+                transition={{ 
+                  duration: 1.5,
+                  repeat: Infinity,
+                  delay: i * 0.2
+                }}
+                className="w-3 h-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"
+              />
+            ))}
+          </motion.div>
+          
+          <motion.p
+            animate={{ opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+            className="text-gray-600 text-lg font-medium"
+          >
+            Checking facts across multiple sources...
+          </motion.p>
+        </motion.div>
+      )}
+
       {/* Results */}
-      {result && (
+      {result && !loading && (
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
