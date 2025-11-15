@@ -182,9 +182,12 @@ Respond only in JSON:
       analysis.push(`✓ ${result.reasoning}`);
     }
     
-    // Add source information if available
+    // Add corroborating sources information if available
     if (result.sources && Array.isArray(result.sources) && result.sources.length > 0) {
-      analysis.push(`Sources: ${result.sources.slice(0, 3).join(', ')}`);
+      analysis.push(`\nCorroborating Sources Found:`);
+      result.sources.slice(0, 5).forEach((source, idx) => {
+        analysis.push(`${idx + 1}. ${source}`);
+      });
     }
     
     // Normalize verdict
