@@ -144,6 +144,40 @@ function VerificationResult({ result }) {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="space-y-8"
     >
+      {/* Corroborating Sources Badge - Show at Top */}
+      {sources && sources.length > 0 && (
+        <motion.div 
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2, type: "spring" }}
+          className="bg-gradient-to-r from-gray-800/90 via-blue-900/50 to-purple-900/50 backdrop-blur-xl rounded-2xl p-6 border-2 border-blue-500/40 shadow-xl"
+        >
+          <h3 className="text-xl font-bold text-white mb-4 flex items-center">
+            <span className="text-2xl mr-2">📰</span>
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Corroborating Sources</span>
+            <span className="ml-3 px-3 py-1 bg-blue-500/20 rounded-full text-blue-400 text-sm font-semibold">{sources.length} Found</span>
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {sources.map((source, i) => (
+              <motion.a
+                key={i}
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 + i * 0.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/30 to-indigo-600/30 hover:from-blue-500/40 hover:to-indigo-500/40 rounded-xl border border-blue-500/30 hover:border-blue-400/60 transition-all shadow-md hover:shadow-lg"
+              >
+                <span className="text-blue-400 font-bold text-xs">●</span>
+                <span className="text-white font-semibold text-sm">{source.source}</span>
+              </motion.a>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
       {/* Score Card */}
       <motion.div 
         initial={{ scale: 0.9, opacity: 0 }}

@@ -27,38 +27,75 @@ function HomePage({ history, addToHistory }) {
       className="w-full max-w-6xl mx-auto space-y-8"
     >
       {/* Hero Section */}
-      <div className="text-center py-8 md:py-12 px-4">
+      <div className="text-center py-8 md:py-12 px-4 relative">
+        {/* Animated Background Glow */}
+        <div className="absolute inset-0 -z-10">
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-full blur-3xl"
+          />
+        </div>
+        
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="mb-6"
         >
-          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold mb-6 shadow-lg shadow-blue-500/50">
-            <span className="relative flex h-2.5 w-2.5">
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.05, 1],
+              boxShadow: [
+                "0 0 20px rgba(59, 130, 246, 0.5)",
+                "0 0 40px rgba(99, 102, 241, 0.6)",
+                "0 0 20px rgba(59, 130, 246, 0.5)"
+              ]
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white px-6 py-3 rounded-full text-base font-bold mb-6"
+          >
+            <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
             </span>
-            <span>AI-Powered Real-Time Verification</span>
-          </div>
+            <span className="text-shadow-lg">⚡ AI-Powered Real-Time Verification</span>
+          </motion.div>
         </motion.div>
         <motion.h1 
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent leading-tight tracking-tight"
+          className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight tracking-tight"
         >
-          Verify News,
+          <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent drop-shadow-2xl">
+            Verify News,
+          </span>
           <br />
-          <span className="text-4xl md:text-6xl lg:text-7xl">Fight Misinformation</span>
+          <motion.span 
+            animate={{ 
+              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+            }}
+            transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+            className="text-4xl md:text-6xl lg:text-7xl bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent bg-[length:200%_auto]"
+          >
+            Fight Misinformation 🔥
+          </motion.span>
         </motion.h1>
         <motion.p 
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed font-medium"
+          className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed font-semibold text-center px-4"
         >
-          Instantly verify any news claim with AI-powered analysis across multiple trusted sources. Get credibility scores and fact-checking in seconds.
+          🚀 Instantly verify any news claim with AI-powered analysis across multiple trusted sources. Get credibility scores and fact-checking in seconds.
         </motion.p>
         <motion.div
           initial={{ y: 10, opacity: 0 }}
