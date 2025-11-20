@@ -1,17 +1,1 @@
-body {
-  background-color: #fafafa;
-  color: #222;
-  font-family: Arial, sans-serif;
-}
-
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
+/* Legacy styles replaced by Tailwind-based Truthify landing page. Intentionally left empty on purpose. */
